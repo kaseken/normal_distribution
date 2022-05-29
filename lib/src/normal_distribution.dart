@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:normal_distribution/src/z_table.dart';
+import './z_table.dart';
 
 class NormalDistribution {
   final double mean;
