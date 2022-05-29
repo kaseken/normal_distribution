@@ -1,4 +1,4 @@
-import 'package:normal_distribution/src/normal_distribution.dart';
+import 'package:normal_distribution/normal_distribution.dart';
 import 'package:test/test.dart';
 
 void main() {

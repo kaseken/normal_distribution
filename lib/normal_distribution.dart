@@ -1,3 +1,3 @@
 library normal_distribution;
 
-export 'src/normal_distribution.dart';
+export 'src/normal_distribution.dart' show NormalDistribution;
