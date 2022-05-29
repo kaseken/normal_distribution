@@ -11,9 +11,17 @@ class NormalDistribution {
     required this.sigma,
   });
 
-  double _z({required double x}) => (x - mean) / sigma;
+  double? _z({required double x}) {
+    if (sigma <= 0) {
+      return null;
+    }
+    return (x - mean) / sigma;
+  }
 
-  double pdf({required double x}) {
+  double? pdf({required double x}) {
+    if (sigma <= 0) {
+      return null;
+    }
     final dividiend = pow(
       e,
       -(pow(x - mean, 2.0) / (2 * pow(sigma, 2.0))),
@@ -22,15 +30,19 @@ class NormalDistribution {
     return dividiend / divisor;
   }
 
-  double cdf({required double x}) {
-    final z = round(_z(x: x), decimalPlaces: 2);
-    if (z == 0) {
+  double? cdf({required double x}) {
+    final z = _z(x: x);
+    if (z == null) {
+      return null;
+    }
+    final roundedZ = round(z, decimalPlaces: 2);
+    if (roundedZ == 0) {
       return 0.5;
     }
-    if (z <= -3.5) {
+    if (roundedZ <= -3.5) {
       return 0;
     }
-    if (z >= 3.5) {
+    if (roundedZ >= 3.5) {
       return 1;
     }
     final zRow = (z.abs() * 10).floor() / 10;
