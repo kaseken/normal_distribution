@@ -4,21 +4,21 @@ import 'package:normal_distribution/src/z_table.dart';
 
 class NormalDistribution {
   final double mean;
-  final double standardDeviation;
+  final double sigma;
 
   const NormalDistribution({
     required this.mean,
-    required this.standardDeviation,
+    required this.sigma,
   });
 
-  double zScore({required double x}) => (x - mean) / standardDeviation;
+  double zScore({required double x}) => (x - mean) / sigma;
 
   double pdf({required double x}) {
     final dividiend = pow(
       e,
-      -(pow(x - mean, 2.0) / (2 * pow(standardDeviation, 2.0))),
+      -(pow(x - mean, 2.0) / (2 * pow(sigma, 2.0))),
     );
-    final divisor = standardDeviation * sqrt(2 * pi);
+    final divisor = sigma * sqrt(2 * pi);
     return dividiend / divisor;
   }
 
