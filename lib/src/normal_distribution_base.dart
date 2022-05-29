@@ -1,6 +1,11 @@
-// TODO: Put public facing types in this file.
+class NormalDistribution {
+  final double mean;
+  final double standardDeviation;
 
-/// Checks if you are awesome. Spoiler: you are.
-class Awesome {
-  bool get isAwesome => true;
+  const NormalDistribution({
+    required this.mean,
+    required this.standardDeviation,
+  });
+
+  double zScore({required double value}) => (value - mean) / standardDeviation;
 }
