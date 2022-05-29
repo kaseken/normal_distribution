@@ -1,4 +1,4 @@
-import 'package:normal_distribution/src/normal_distribution.dart';
+import 'package:normal_distribution/normal_distribution.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -26,6 +26,10 @@ void main() {
       expect(
         NormalDistribution(mean: -2.31, sigma: 3.00001).cdf(x: 0.014401),
         0.7794,
+      );
+      expect(
+        NormalDistribution(mean: -0.21, sigma: 1.7).cdf(x: -0.73),
+        0.37829999999999997,
       );
     });
 
@@ -69,6 +73,10 @@ void main() {
         NormalDistribution(mean: 0.0000000014, sigma: 0.980000001)
             .pdf(x: 2e-12),
         0.4070839591779069,
+      );
+      expect(
+        NormalDistribution(mean: -0.21, sigma: 1.7).pdf(x: -0.73),
+        0.22394634407779582,
       );
     });
 

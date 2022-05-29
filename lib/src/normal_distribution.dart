@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:normal_distribution/src/z_table.dart';
+import './z_table.dart';
 
 class NormalDistribution {
   final double mean;
@@ -18,6 +18,7 @@ class NormalDistribution {
     return (x - mean) / sigma;
   }
 
+  /// Returns the probability density function for the given [mean] and [sigma], evaluated at [x].
   double? pdf({required double x}) {
     if (sigma <= 0) {
       return null;
@@ -30,6 +31,7 @@ class NormalDistribution {
     return dividiend / divisor;
   }
 
+  /// Returns the cumulative distribution function for the given [mean] and [sigma], evaluated at [x].
   double? cdf({required double x}) {
     final z = _z(x: x);
     if (z == null) {
