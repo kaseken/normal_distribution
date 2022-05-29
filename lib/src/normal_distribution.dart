@@ -49,7 +49,7 @@ class NormalDistribution {
     final zCol = (z.abs() * 100).round() % 10;
     final absPercentile = zTable[zRow]?[zCol];
     if (absPercentile == null) {
-      throw Exception('Invalid zTable');
+      throw Exception('Invalid zTable, zRow = $zRow, zCol = $zCol');
     }
     return z < 0 ? 1 - absPercentile : absPercentile;
   }

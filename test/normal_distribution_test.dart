@@ -43,4 +43,47 @@ void main() {
       );
     });
   });
+
+  group('pdf', () {
+    test('when mean is 0 and sigma is 1', () {
+      expect(
+        NormalDistribution(mean: 0, sigma: 1).pdf(x: 0),
+        0.3989422804014327,
+      );
+      expect(
+        NormalDistribution(mean: 0, sigma: 1).pdf(x: -1),
+        0.24197072451914337,
+      );
+      expect(
+        NormalDistribution(mean: 0, sigma: 1).pdf(x: 1),
+        0.24197072451914337,
+      );
+    });
+
+    test('when mean is not 0 and sigma is not 1', () {
+      expect(
+        NormalDistribution(mean: 12.4, sigma: 3.21).pdf(x: 13.92),
+        0.11110048870538951,
+      );
+      expect(
+        NormalDistribution(mean: 0.0000000014, sigma: 0.980000001)
+            .pdf(x: 2e-12),
+        0.4070839591779069,
+      );
+    });
+
+    test('when sigma is 0', () {
+      expect(
+        NormalDistribution(mean: 0.0000000014, sigma: 0).pdf(x: 2e-12),
+        null,
+      );
+    });
+
+    test('when sigma is negative', () {
+      expect(
+        NormalDistribution(mean: 0.0000000014, sigma: -0.01).pdf(x: 2e-12),
+        null,
+      );
+    });
+  });
 }
