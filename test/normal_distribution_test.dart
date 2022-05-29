@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 void main() {
   group('cdf', () {
-    test('when μ is 0 and σ is 1', () {
+    test('when mean is 0 and sigma is 1', () {
       expect(
         NormalDistribution(mean: 0, sigma: 1).cdf(x: 0),
         0.5,
@@ -22,10 +22,24 @@ void main() {
       );
     });
 
-    test('when μ is not 0 and σ is not 1', () {
+    test('when mean is not 0 and sigma is not 1', () {
       expect(
         NormalDistribution(mean: -2.31, sigma: 3.00001).cdf(x: 0.014401),
         0.7794,
+      );
+    });
+
+    test('when sigma is 0', () {
+      expect(
+        NormalDistribution(mean: -2.31, sigma: 0).cdf(x: 0.014401),
+        null,
+      );
+    });
+
+    test('when sigma is negative', () {
+      expect(
+        NormalDistribution(mean: -2.31, sigma: -0.01).cdf(x: 0.014401),
+        null,
       );
     });
   });
