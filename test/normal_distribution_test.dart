@@ -10,7 +10,7 @@ void main() {
       );
       expect(
         NormalDistribution(mean: 0, sigma: 1).cdf(x: -1),
-        0.15865526139567468,
+        0.15865526139567465,
       );
       expect(
         NormalDistribution(mean: 0, sigma: 1).cdf(x: 1),
