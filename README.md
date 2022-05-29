@@ -8,7 +8,7 @@ Returns the cumulative distribution function for the given `mean` and `sigma`, e
 
 ```dart
 NormalDistribution(mean: -0.21, sigma: 1.7).cdf(x: -0.73);
-// Result: 0.37829999999999997
+// Result: 0.3798471227404693
 ```
 
 #### Note:

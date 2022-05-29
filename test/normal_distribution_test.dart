@@ -6,30 +6,30 @@ void main() {
     test('when mean is 0 and sigma is 1', () {
       expect(
         NormalDistribution(mean: 0, sigma: 1).cdf(x: 0),
-        0.5,
+        0.5000000150000002,
       );
       expect(
         NormalDistribution(mean: 0, sigma: 1).cdf(x: -1),
-        0.15869999999999995,
+        0.15865526139567465,
       );
       expect(
         NormalDistribution(mean: 0, sigma: 1).cdf(x: 1),
-        0.8413,
+        0.8413447386043253,
       );
       expect(
         NormalDistribution(mean: 0, sigma: 1).cdf(x: 6),
-        1.0,
+        0.9999999990134124,
       );
     });
 
     test('when mean is not 0 and sigma is not 1', () {
       expect(
         NormalDistribution(mean: -2.31, sigma: 3.00001).cdf(x: 0.014401),
-        0.7794,
+        0.7807704188058089,
       );
       expect(
         NormalDistribution(mean: -0.21, sigma: 1.7).cdf(x: -0.73),
-        0.37829999999999997,
+        0.3798471227404693,
       );
     });
 
