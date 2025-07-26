@@ -3,8 +3,6 @@ on:
   push:
     branches:
       - master
-    paths:
-      - 'pubspec.yaml'
 jobs:
   create-tag:
     runs-on: ubuntu-latest
@@ -43,3 +41,5 @@ jobs:
         if: steps.version_check.outputs.create_tag == 'true'
         run: |
           gh workflow run publish.yml --ref "refs/tags/v${{ steps.version_check.outputs.version }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
