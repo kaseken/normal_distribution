@@ -1,0 +1,47 @@
+name: Create Git Tag on Version Change
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'pubspec.yaml'
+jobs:
+  create-tag:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check if version changed
+        id: version_check
+        run: |
+          # Get current version from pubspec.yaml
+          CURRENT_VERSION=$(grep '^version:' pubspec.yaml | cut -d' ' -f2)
+          echo "Current version: $CURRENT_VERSION"
+
+          # Check if this version tag already exists
+          if git tag | grep -q "^v$CURRENT_VERSION$"; then
+            echo "Tag v$CURRENT_VERSION already exists"
+            echo "create_tag=false" >> $GITHUB_OUTPUT
+          else
+            echo "New version detected: $CURRENT_VERSION"
+            echo "create_tag=true" >> $GITHUB_OUTPUT
+            echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          fi
+      - name: Create Git tag
+        if: steps.version_check.outputs.create_tag == 'true'
+        run: |
+          VERSION=${{ steps.version_check.outputs.version }}
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "v$VERSION" -m "Release version $VERSION"
+          git push origin "v$VERSION"
+      - name: Trigger publish workflow
+        if: steps.version_check.outputs.create_tag == 'true'
+        run: |
+          gh workflow run publish.yml --ref "refs/tags/v${{ steps.version_check.outputs.version }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

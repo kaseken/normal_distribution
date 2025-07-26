@@ -1,25 +1,11 @@
 name: Publish to pub.dev
-
 on:
   push:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+*'
-
+  workflow_dispatch: # Enables to be triggered from other workflows.
 jobs:
   publish:
-    runs-on: ubuntu-latest
-    environment: 'pub.dev'
     permissions:
-      id-token: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dart-lang/setup-dart@v1
-
-      - name: Install dependencies
-        run: dart pub get
-
-      - name: Run tests
-        run: dart test
-
-      - name: Publish to pub.dev
-        run: dart pub publish --force
+      id-token: write # Required for authentication using OIDC
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
