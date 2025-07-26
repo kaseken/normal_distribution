@@ -1,10 +1,10 @@
 name: normal_distribution
 description: A minimal Dart module for working with normal distributions.
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/kaseken/normal_distribution
 
 environment:
-  sdk: '>=2.16.2 <3.0.0'
+  sdk: '>=2.16.2 <4.0.0'
 
 dev_dependencies:
   lints: ^1.0.0
