@@ -15,6 +15,7 @@ jobs:
     environment: 'pub.dev'
     permissions:
       id-token: write
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
@@ -28,6 +29,19 @@ jobs:
       - name: Dry run publish
         if: ${{ inputs.dry_run }}
         run: dart pub publish --dry-run
+
+      - name: Create and push tag
+        if: ${{ !inputs.dry_run }}
+        run: |
+          VERSION=$(grep '^version:' pubspec.yaml | cut -d' ' -f2)
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          if ! git rev-parse "v$VERSION" >/dev/null 2>&1; then
+            git tag "v$VERSION"
+            git push origin "v$VERSION"
+          else
+            echo "Tag v$VERSION already exists"
+          fi
 
       - name: Publish to pub.dev
         if: ${{ !inputs.dry_run }}
