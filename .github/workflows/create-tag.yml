@@ -43,5 +43,3 @@ jobs:
         if: steps.version_check.outputs.create_tag == 'true'
         run: |
           gh workflow run publish.yml --ref "refs/tags/v${{ steps.version_check.outputs.version }}"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
