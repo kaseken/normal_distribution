@@ -1,0 +1,21 @@
+name: normal_distribution
+
+packages:
+  - .
+
+scripts:
+  analyze:
+    run: dart analyze .
+    description: Run Dart static analysis
+
+  test:
+    run: dart test
+    description: Run tests
+
+  format:
+    run: dart format .
+    description: Format Dart code
+
+  publish:
+    run: dart pub publish
+    description: Publish package to pub.dev

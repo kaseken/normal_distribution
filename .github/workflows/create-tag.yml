@@ -1,45 +1,42 @@
-name: Create Git Tag on Version Change
+name: Tag and start release
 on:
-  push:
-    branches:
-      - master
+  workflow_dispatch:
+env:
+  DART_VERSION: 3.1.0
 jobs:
   create-tag:
-    runs-on: ubuntu-latest
+    name: Create tags for release
     permissions:
-      contents: write
-      actions: write
+      actions: write # Required to trigger publish.yml workflow
+      contents: write # Required to create and push git tags
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Check if version changed
-        id: version_check
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ env.DART_VERSION }}
+      - name: Setup Melos
         run: |
-          # Get current version from pubspec.yaml
-          CURRENT_VERSION=$(grep '^version:' pubspec.yaml | cut -d' ' -f2)
-          echo "Current version: $CURRENT_VERSION"
-
-          # Check if this version tag already exists
-          if git tag | grep -q "^v$CURRENT_VERSION$"; then
-            echo "Tag v$CURRENT_VERSION already exists"
-            echo "create_tag=false" >> $GITHUB_OUTPUT
-          else
-            echo "New version detected: $CURRENT_VERSION"
-            echo "create_tag=true" >> $GITHUB_OUTPUT
-            echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
-          fi
-      - name: Create Git tag
-        if: steps.version_check.outputs.create_tag == 'true'
+          dart pub global activate melos
+          dart pub global run melos bootstrap
+      - name: Configure Git
         run: |
-          VERSION=${{ steps.version_check.outputs.version }}
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -a "v$VERSION" -m "Release version $VERSION"
-          git push origin "v$VERSION"
-      - name: Trigger publish workflow
-        if: steps.version_check.outputs.create_tag == 'true'
+      - name: Create tags
         run: |
-          gh workflow run publish.yml --ref "refs/tags/v${{ steps.version_check.outputs.version }}"
+          # Create tags for all packages (including if they already exist)
+          # We don't care about errors due to creating new tags (`|| true`)
+          melos exec -c 1 --no-private -- git tag \$MELOS_PACKAGE_NAME-v\$MELOS_PACKAGE_VERSION || true
+          git push --tags
+      - name: Start release
+        run: |
+          # Trigger publish workflow for packages that haven't been published yet
+          melos exec -c 1 --no-published --no-private --order-dependents -- \
+          gh workflow run publish.yml \
+          --ref \$MELOS_PACKAGE_NAME-v\$MELOS_PACKAGE_VERSION
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
