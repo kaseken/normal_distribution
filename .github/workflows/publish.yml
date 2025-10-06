@@ -1,11 +1,40 @@
-name: Publish to pub.dev
+name: Publish packages
 on:
-  push:
-    tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+*'
-  workflow_dispatch: # Enables to be triggered from other workflows.
+  workflow_dispatch:
+env:
+  DART_VERSION: 3.1.0
 jobs:
-  publish:
+  publish-packages:
+    name: Publish packages
     permissions:
+      contents: write
       id-token: write # Required for authentication using OIDC
-    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate ref is a tag
+        run: |
+          if [[ "${{ github.ref }}" != refs/tags/* ]]; then
+            echo "Error: This workflow must be triggered with a tag reference"
+            echo "Current ref: ${{ github.ref }}"
+            exit 1
+          fi
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ env.DART_VERSION }}
+      - name: Setup Melos
+        run: |
+          dart pub global activate melos
+          dart pub global run melos bootstrap
+      - name: Extract package name from tag
+        run: |
+          GITHUB_REF="${{ github.ref }}"
+          PACKAGE_NAME=$(sed -E 's/refs\/tags\/([a-z0-9_]+)-v([0-9]+\.[0-9]+\.[0-9]+.*)$/\1/' <<< "$GITHUB_REF")
+          echo "PACKAGE_NAME=$PACKAGE_NAME" >> $GITHUB_ENV
+      - name: Publish package to pub.dev
+        run: |
+          echo "Publishing package: $PACKAGE_NAME (Tag/Ref: ${{ github.ref_name }})"
+          melos publish -y --no-dry-run --scope=$PACKAGE_NAME

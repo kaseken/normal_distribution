@@ -1,3 +1,7 @@
+## 0.0.5
+
+- Upgraded automatic publishing workflow.
+
 ## 0.0.4
 
 - Upgraded automatic publishing workflow.
